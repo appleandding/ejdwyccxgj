@@ -2794,14 +2794,14 @@
     const TAVERN_PASSWORD = 'XGJHNBNKSL';
 
     const KNOWN_BROWSERS = [
-      { id: 'quark', name: '夸克浏览器', scheme: 'quark://' },
-      { id: 'alook', name: 'Alook 浏览器', scheme: 'alook://' },
-      { id: 'firefox', name: 'Firefox 火狐', scheme: 'firefox://open-url?url=' },
-      { id: 'uc', name: 'UC 浏览器', scheme: 'ucbrowser://' },
-      { id: 'brave', name: 'Brave 浏览器', scheme: 'brave://open-url?url=' },
-      { id: 'kiwi', name: 'Kiwi 浏览器', scheme: 'kiwibrowser://' },
-      { id: 'sogou', name: '搜狗浏览器', scheme: 'sogousearch://' },
-      { id: '360', name: '360 浏览器', scheme: 'qihoo360://' }
+      { id: 'quark', name: '夸克浏览器', scheme: 'quark://', pkg: 'com.quark.browser' },
+      { id: 'alook', name: 'Alook 浏览器', scheme: 'alook://', pkg: 'com.alookdesktop.browser' },
+      { id: 'firefox', name: 'Firefox 火狐', scheme: 'firefox://open-url?url=', pkg: 'org.mozilla.firefox' },
+      { id: 'uc', name: 'UC 浏览器', scheme: 'ucbrowser://', pkg: 'com.UCMobile' },
+      { id: 'brave', name: 'Brave 浏览器', scheme: 'brave://open-url?url=', pkg: 'com.brave.browser' },
+      { id: 'kiwi', name: 'Kiwi 浏览器', scheme: 'kiwibrowser://', pkg: 'com.kiwibrowser.browser' },
+      { id: 'sogou', name: '搜狗浏览器', scheme: 'sogousearch://', pkg: 'sogou.mobile.explorer' },
+      { id: '360', name: '360 浏览器', scheme: 'qihoo360://', pkg: 'com.qihoo.browser' }
     ];
 
     let savedCustomBrowsers = JSON.parse(localStorage.getItem('saved_custom_browsers') || '[]');
@@ -4416,37 +4416,71 @@
       renderCards();
     });
 
+    // 专为 WebToApp / APK 打包定制的直接外跳引擎（杜绝触发 APK 内置全屏窗口）
     function launchTool(url, browser, customScheme) {
       if (isEditMode) return;
-      try {
-        if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen();
-      } catch (err) {}
 
-      const cleanUrl = url.replace(/^https?:\/\//, '');
-      let finalTarget = url;
+      let fullUrl = url.trim();
+      if (!/^https?:\/\//i.test(fullUrl)) {
+        fullUrl = 'https://' + fullUrl;
+      }
+      const scheme = fullUrl.startsWith('https://') ? 'https' : 'http';
+      const cleanUrl = fullUrl.replace(/^https?:\/\//i, '');
+      const isAndroid = /android/i.test(navigator.userAgent);
 
-      switch(browser) {
-        case 'chrome': finalTarget = `googlechrome://${cleanUrl}`; break;
-        case 'safari': finalTarget = url; break;
-        case 'edge': finalTarget = `microsoft-edge-${url.startsWith('https') ? 'https' : 'http'}://${cleanUrl}`; break;
-        case 'via': finalTarget = `via://${cleanUrl}`; break;
-        case 'xbrowser': finalTarget = `xb://${cleanUrl}`; break;
-        case 'yujian': finalTarget = `yujian://${cleanUrl}`; break;
-        case 'saved_custom':
-        case 'custom':
-          if (customScheme) {
-            if (customScheme.includes('url=')) {
-              finalTarget = `${customScheme}${encodeURIComponent(url)}`;
-            } else {
-              const prefix = customScheme.endsWith('://') ? customScheme : customScheme + '://';
-              finalTarget = `${prefix}${cleanUrl}`;
-            }
+      // 安卓常见各大浏览器官方包名
+      const PKG_MAP = {
+        'chrome': 'com.android.chrome',
+        'edge': 'com.microsoft.emmx',
+        'via': 'mark.via',
+        'xbrowser': 'com.xbrowser.play',
+        'yujian': 'com.yj.browser'
+      };
+
+      let finalTarget = fullUrl;
+
+      if (isAndroid) {
+        if (browser === 'default') {
+          // 呼叫安卓系统级 Intent 选择器跳出 APK 壳子
+          finalTarget = `intent://${cleanUrl}#Intent;scheme=${scheme};action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;end`;
+        } else if (PKG_MAP[browser]) {
+          // 锁定指定浏览器包名
+          const pkg = PKG_MAP[browser];
+          finalTarget = `intent://${cleanUrl}#Intent;scheme=${scheme};package=${pkg};S.browser_fallback_url=${encodeURIComponent(fullUrl)};end`;
+        } else if (browser === 'saved_custom' || browser === 'custom') {
+          const matched = KNOWN_BROWSERS.find(b => b.scheme === customScheme || b.id === customScheme);
+          if (matched && matched.pkg) {
+            finalTarget = `intent://${cleanUrl}#Intent;scheme=${scheme};package=${matched.pkg};S.browser_fallback_url=${encodeURIComponent(fullUrl)};end`;
+          } else if (customScheme) {
+            finalTarget = customScheme.includes('url=') 
+              ? `${customScheme}${encodeURIComponent(fullUrl)}` 
+              : `${customScheme.endsWith('://') ? customScheme : customScheme + '://'}${cleanUrl}`;
           }
-          break;
-        default: finalTarget = url;
+        }
+      } else {
+        // iOS 平台处理
+        switch(browser) {
+          case 'chrome': finalTarget = `googlechrome://${cleanUrl}`; break;
+          case 'edge': finalTarget = `microsoft-edge-${scheme}://${cleanUrl}`; break;
+          case 'via': finalTarget = `via://${cleanUrl}`; break;
+          case 'xbrowser': finalTarget = `xb://${cleanUrl}`; break;
+          case 'yujian': finalTarget = `yujian://${cleanUrl}`; break;
+          default: finalTarget = fullUrl;
+        }
       }
 
-      setTimeout(() => { window.location.href = finalTarget; }, 50);
+      // 严禁使用 target="_blank"（否则 WebToApp 会强制打开它的全屏内置浏览器导致卡死）
+      // 1. 尝试 WebToApp / Cordova 原生脱壳指令
+      try {
+        if (window.open) {
+          window.open(fullUrl, '_system');
+        }
+      } catch (e) {}
+
+      // 2. 安卓 Intent 单通道精准直投，直接交由手机系统外部应用接管
+      try {
+        window.location.href = finalTarget;
+      } catch (e) {}
     }
 
     // ==========================================
