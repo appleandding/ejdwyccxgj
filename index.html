@@ -3,7 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Small tools</title>
+  <title>Small Tools</title>
+  <!-- PWA 独立桌面应用核心配置 (Chrome / Edge 专享) -->
+  <link rel="icon" type="image/jpeg" href="https://2.58sb.cn/file/img/XOl6F3oJ.jpg">
+  <link rel="apple-touch-icon" href="https://2.58sb.cn/file/img/XOl6F3oJ.jpg">
+  <meta name="theme-color" content="#5b7c99">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Small Tools">
+
+  <!-- 内嵌式 Web App Manifest (独立全屏 standalone，非快捷方式) -->
+  <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22Small%20Tools%22%2C%22short_name%22%3A%22Small%20Tools%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23edf2f6%22%2C%22theme_color%22%3A%22%235b7c99%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22https%3A%2F%2F2.58sb.cn%2Ffile%2Fimg%2FXOl6F3oJ.jpg%22%2C%22sizes%22%3A%22192x192%20512x512%22%2C%22type%22%3A%22image%2Fjpeg%22%2C%22purpose%22%3A%22any%20maskable%22%7D%5D%7D">
+
   <style>
     :root {
       /* 舒适灰蓝调 */
@@ -3111,6 +3123,64 @@
         await syncSaveData(toolsData);
       }
     }
+
+    // ==========================================
+    // PWA 直接安装为桌面应用引擎 (Chrome / Edge 专享)
+    // ==========================================
+    let deferredPwaPrompt = null;
+
+    // 监听浏览器原生 PWA 安装就绪信号
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPwaPrompt = e;
+      const installBtn = document.getElementById('pwaInstallBtn');
+      if (installBtn) {
+        installBtn.style.color = 'var(--accent)';
+        installBtn.style.borderColor = 'var(--accent)';
+      }
+    });
+
+    // 检查是否已经在独立全屏 App 状态下运行
+    function isRunningStandalone() {
+      return (window.matchMedia('(display-mode: standalone)').matches) || (window.navigator.standalone === true);
+    }
+
+    function triggerPwaInstall() {
+      if (isRunningStandalone()) {
+        alert('Small Tools 已经是以桌面独立应用模式运行啦！^^');
+        return;
+      }
+
+      // 如果浏览器捕获到了安装句柄，直接一键唤醒原生安装对话框
+      if (deferredPwaPrompt) {
+        deferredPwaPrompt.prompt();
+        deferredPwaPrompt.userChoice.then((choiceResult) => {
+          if (choiceResult.outcome === 'accepted') {
+            deferredPwaPrompt = null;
+          }
+        });
+      } else {
+        // 如果未捕获（如部分手机环境或已被拒绝过），打开智能图文指引
+        document.getElementById('pwaManualGuideText').style.display = 'block';
+        openModal('pwaInstallModalOverlay');
+      }
+    }
+
+    async function executePwaInstall() {
+      if (deferredPwaPrompt) {
+        closeModal('pwaInstallModalOverlay');
+        deferredPwaPrompt.prompt();
+        deferredPwaPrompt = null;
+      } else {
+        closeModal('pwaInstallModalOverlay');
+        alert('请在 Chrome / Edge 点击右上角【⋮】或底栏【…】，点击【安装应用】即可秒速安装到桌面！');
+      }
+    }
+
+    window.addEventListener('appinstalled', () => {
+      deferredPwaPrompt = null;
+      alert('Small Tools 安装成功！已在手机桌面上生成独立应用图标。');
+    });
 
     // APK / 网页一键旋转刷新整页
     function refreshPage() {
