@@ -158,24 +158,21 @@
       display: flex;
     }
 
-    /* 顶栏管理按钮 (解决 APK 下渲染成实心白方块的问题) */
+    /* 顶栏管理按钮 */
     .header-action-btn {
       width: 32px;
       height: 32px;
       border-radius: 9px;
-      border: 1px solid rgba(255, 255, 255, 0.9);
-      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      background: rgba(255, 255, 255, 0.5);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
       display: flex;
       align-items: center;
       justify-content: center;
       color: var(--text-sub);
       cursor: pointer;
       transition: all 0.2s ease;
-      position: relative;
-    }
-    .header-action-btn svg {
-      position: relative;
-      z-index: 2;
     }
 
     .header-action-btn:active {
@@ -653,14 +650,12 @@
       z-index: 10;
     }
 
-    /* 普通人设专属长方形大卡片网格 (强制锁定两列行对齐，根治 APK 阶梯下沉断崖错位) */
+    /* 普通人设专属长方形大卡片网格 (严格双列等宽 50%，防止长名字撑爆) */
     .persona-grid-view {
-      display: grid !important;
-      grid-template-columns: 1fr 1fr !important;
-      grid-auto-flow: row !important;
-      align-items: stretch !important;
-      gap: 10px !important;
-      width: 100% !important;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      width: 100%;
     }
 
     /* 同等大小的长方形添加虚线卡片 */
@@ -672,14 +667,12 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      min-height: 94px;
-      height: 100%;
+      min-height: 84px;
       min-width: 0;
       background: rgba(255, 255, 255, 0.25);
       cursor: pointer;
       transition: all 0.2s ease;
       gap: 4px;
-      box-sizing: border-box;
     }
 
     .add-rect-card:active {
@@ -793,9 +786,7 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      min-height: 94px;
-      height: 100%;
-      box-sizing: border-box;
+      min-height: 84px;
       min-width: 0;
       width: 100%;
       overflow: hidden;
@@ -2741,7 +2732,6 @@
         enterkeyhint="search" 
         placeholder="搜索工具、角色名、标签或内容..." 
         onfocus="onSearchFocus()" 
-        onblur="onSearchBlur()"
         onkeydown="handleSearchKeyDown(event)"
         oninput="handleSearchInputChange(event)"
       />
@@ -2813,29 +2803,6 @@
           </div>
         </div>
         <div class="profile-menu-arrow">➔</div>
-      </div>
-
-      <!-- 排列 2.5：安装应用的图标选择 (标注仅iOS用户可用) -->
-      <div class="profile-menu-row" onclick="toggleAppIconDrawer()">
-        <div class="profile-menu-left">
-          <div class="profile-menu-icon">
-            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5" ry="5"></rect><circle cx="12" cy="12" r="3"></circle></svg>
-          </div>
-          <div>
-            <div class="profile-menu-title">
-              安装应用的图标选择 
-              <span style="font-size: 9.5px; color: var(--accent); font-weight: normal;">(仅iOS用户可自定义)</span>
-            </div>
-            <div class="profile-menu-desc">更换添加到桌面时的展示图标（支持相册/在线图）</div>
-          </div>
-        </div>
-        <div class="profile-menu-arrow" id="appIconArrow">▼</div>
-      </div>
-
-      <!-- 图标选择抽屉 -->
-      <div class="app-icon-drawer-box" id="appIconDrawerBox">
-        <div style="font-size: 10px; color: var(--text-sub); margin-bottom: 8px;">点击图标即可应用，点击加号可添加相册图片（注：仅苹果 iOS 添加至屏幕生效）：</div>
-        <div class="app-icon-grid" id="appIconListContainer"></div>
       </div>
 
       <!-- 排列 2：功能指南 (点击即时展开抽屉查看全部功能教程) -->
@@ -3358,26 +3325,6 @@
     </div>
   </div>
 
-  <!-- 弹窗：添加自定义桌面图标 (仅iOS生效) -->
-  <div class="modal-overlay" id="addAppIconModalOverlay">
-    <div class="glass-dialog" style="max-width: 290px;">
-      <div class="dialog-title">添加桌面图标</div>
-      <div class="form-group">
-        <label>方式一：输入图片在线链接 (URL)</label>
-        <input type="url" id="appIconUrlInput" class="form-input" placeholder="https://...jpg / png" />
-      </div>
-      <div class="form-group">
-        <label>方式二：从手机相册选择</label>
-        <button class="btn btn-secondary" style="width:100%; height:34px;" onclick="document.getElementById('customAppIconFileInput').click()">选择本地图片</button>
-        <input type="file" id="customAppIconFileInput" accept="image/*" style="display:none;" onchange="handleAppIconFileUpload(event)" />
-      </div>
-      <div class="dialog-btns">
-        <button class="btn btn-cancel" onclick="closeModal('addAppIconModalOverlay')">取消</button>
-        <button class="btn btn-submit" onclick="saveCustomAppIconFromUrl()">确认添加</button>
-      </div>
-    </div>
-  </div>
-
   <!-- 弹窗 7：新建标签弹窗 (支持4种排版自选) -->
   <div class="modal-overlay" id="newTagModalOverlay">
     <div class="glass-dialog" style="max-width: 295px;">
@@ -3881,121 +3828,6 @@
     let accountSearchKeyword = '';
     let currentAccTypeTab = 'phone'; // 'phone' 或 'api'
     let currentNewWebIconBase64 = null; // 暂存新建小工具图标
-
-    // ==========================================
-    // 恢复：应用桌面图标管理 (专供 iOS 用户添加到桌面)
-    // ==========================================
-    const BUILTIN_APP_ICONS = [
-      'https://2.58sb.cn/file/img/XOl6F3oJ.jpg',
-      'https://image.58sb.cn/file/img/0QjLqQcb.jpg'
-    ];
-
-    let customAppIconsList = JSON.parse(localStorage.getItem('custom_app_icons_list') || '[]');
-    let currentSelectedAppIcon = localStorage.getItem('current_app_icon') || BUILTIN_APP_ICONS[0];
-
-    function applyAppIcon(iconUrl) {
-      if (!iconUrl) return;
-      currentSelectedAppIcon = iconUrl;
-      localStorage.setItem('current_app_icon', iconUrl);
-
-      let appleIcon = document.querySelector('link[rel="apple-touch-icon"]');
-      if (!appleIcon) {
-        appleIcon = document.createElement('link');
-        appleIcon.rel = 'apple-touch-icon';
-        document.head.appendChild(appleIcon);
-      }
-      appleIcon.href = iconUrl;
-
-      let favIcon = document.querySelector('link[rel="icon"]');
-      if (!favIcon) {
-        favIcon = document.createElement('link');
-        favIcon.rel = 'icon';
-        document.head.appendChild(favIcon);
-      }
-      favIcon.href = iconUrl;
-    }
-
-    applyAppIcon(currentSelectedAppIcon);
-
-    function toggleAppIconDrawer() {
-      const box = document.getElementById('appIconDrawerBox');
-      const arrow = document.getElementById('appIconArrow');
-      if (box.style.display === 'none' || !box.style.display) {
-        box.style.display = 'block';
-        if (arrow) arrow.innerText = '▲';
-        renderAppIconsUI();
-      } else {
-        box.style.display = 'none';
-        if (arrow) arrow.innerText = '▼';
-      }
-    }
-
-    function renderAppIconsUI() {
-      const container = document.getElementById('appIconListContainer');
-      if (!container) return;
-      container.innerHTML = '';
-
-      const allIcons = [...BUILTIN_APP_ICONS, ...customAppIconsList];
-
-      allIcons.forEach(iconUrl => {
-        const isSelected = (iconUrl === currentSelectedAppIcon);
-        const card = document.createElement('div');
-        card.className = `app-icon-card ${isSelected ? 'selected' : ''}`;
-        card.innerHTML = `<img src="${iconUrl}" alt="图标" />`;
-        card.onclick = () => {
-          applyAppIcon(iconUrl);
-          renderAppIconsUI();
-          showToast('桌面图标已切换 (iOS有效)');
-        };
-        container.appendChild(card);
-      });
-
-      const addBtn = document.createElement('div');
-      addBtn.className = 'app-icon-card-add';
-      addBtn.title = '添加自定义图标';
-      addBtn.innerHTML = `<svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>`;
-      addBtn.onclick = () => {
-        document.getElementById('appIconUrlInput').value = '';
-        openModal('addAppIconModalOverlay');
-      };
-      container.appendChild(addBtn);
-    }
-
-    function saveCustomAppIconFromUrl() {
-      const url = document.getElementById('appIconUrlInput').value.trim();
-      if (!url) {
-        showToast('请输入有效图片链接');
-        return;
-      }
-      if (!customAppIconsList.includes(url)) {
-        customAppIconsList.push(url);
-        localStorage.setItem('custom_app_icons_list', JSON.stringify(customAppIconsList));
-      }
-      closeModal('addAppIconModalOverlay');
-      applyAppIcon(url);
-      renderAppIconsUI();
-      showToast('图标添加并生效！');
-    }
-
-    function handleAppIconFileUpload(event) {
-      const file = event.target.files && event.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const b64 = e.target.result;
-        if (!customAppIconsList.includes(b64)) {
-          customAppIconsList.push(b64);
-          localStorage.setItem('custom_app_icons_list', JSON.stringify(customAppIconsList));
-        }
-        closeModal('addAppIconModalOverlay');
-        applyAppIcon(b64);
-        renderAppIconsUI();
-        showToast('相册图标添加并生效！');
-      };
-      reader.readAsDataURL(file);
-      event.target.value = '';
-    }
 
     // 字节大小智能换算 (B, KB, MB, GB 精准呈现)
     function formatStorageSize(bytes) {
@@ -4558,13 +4390,6 @@
       searchKeyword = searchInput.value.trim();
       isSearchActive = true;
       renderCards();
-    }
-
-    function onSearchBlur() {
-      // 若搜索框已无内容，失焦时自动恢复分类标签栏，杜绝标签栏卡没的问题
-      if (!searchInput.value.trim()) {
-        clearSearch();
-      }
     }
 
     function clearSearch() {
