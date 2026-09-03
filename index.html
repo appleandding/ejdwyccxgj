@@ -3,19 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Small Tools</title>
-  <!-- PWA 独立桌面应用核心配置 (Chrome / Edge 专享) -->
-  <link rel="icon" type="image/jpeg" href="https://2.58sb.cn/file/img/XOl6F3oJ.jpg">
-  <link rel="apple-touch-icon" href="https://2.58sb.cn/file/img/XOl6F3oJ.jpg">
-  <meta name="theme-color" content="#5b7c99">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="Small Tools">
-
-  <!-- 内嵌式 Web App Manifest (独立全屏 standalone，非快捷方式) -->
-  <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22Small%20Tools%22%2C%22short_name%22%3A%22Small%20Tools%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23edf2f6%22%2C%22theme_color%22%3A%22%235b7c99%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22https%3A%2F%2F2.58sb.cn%2Ffile%2Fimg%2FXOl6F3oJ.jpg%22%2C%22sizes%22%3A%22192x192%20512x512%22%2C%22type%22%3A%22image%2Fjpeg%22%2C%22purpose%22%3A%22any%20maskable%22%7D%5D%7D">
-
+  <title>Small tools</title>
   <style>
     :root {
       /* 舒适灰蓝调 */
@@ -349,10 +337,10 @@
       z-index: 10;
     }
 
-    /* 一行三个长方形网格 (美化分区) */
+    /* 一行三个长方形网格 (美化分区，固定宽度 minmax(0, 1fr)) */
     .rect3-grid-view {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 8px;
     }
 
@@ -367,6 +355,7 @@
       flex-direction: column;
       justify-content: space-between;
       min-height: 82px;
+      min-width: 0;
       box-shadow: var(--shadow);
       position: relative;
       cursor: pointer;
@@ -386,6 +375,7 @@
       align-items: center;
       justify-content: center;
       min-height: 82px;
+      min-width: 0;
       background: rgba(255, 255, 255, 0.25);
       cursor: pointer;
       transition: all 0.2s ease;
@@ -398,10 +388,10 @@
       border-color: var(--accent);
     }
 
-    /* 一行四个长方形网格 (表情包分区) */
+    /* 一行四个长方形网格 (表情包分区，固定宽度 minmax(0, 1fr)) */
     .rect4-grid-view {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 6px;
     }
 
@@ -417,6 +407,7 @@
       align-items: center;
       justify-content: space-between;
       min-height: 68px;
+      min-width: 0;
       box-shadow: var(--shadow);
       position: relative;
       cursor: pointer;
@@ -437,6 +428,7 @@
       align-items: center;
       justify-content: center;
       min-height: 68px;
+      min-width: 0;
       background: rgba(255, 255, 255, 0.25);
       cursor: pointer;
       transition: all 0.2s ease;
@@ -507,10 +499,10 @@
       color: var(--text-sub);
     }
 
-    /* 正方形网格排版 */
+    /* 正方形网格排版 (固定宽度 minmax(0, 1fr)) */
     .square-grid-view {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 10px;
     }
 
@@ -526,6 +518,7 @@
       align-items: center;
       justify-content: center;
       aspect-ratio: 1 / 1;
+      min-width: 0;
       box-shadow: var(--shadow);
       position: relative;
       cursor: pointer;
@@ -546,6 +539,7 @@
       align-items: center;
       justify-content: center;
       aspect-ratio: 1 / 1;
+      min-width: 0;
       background: rgba(255, 255, 255, 0.25);
       cursor: pointer;
       transition: all 0.2s ease;
@@ -609,10 +603,10 @@
       padding: 8px 10px 80px 10px;
     }
 
-    /* 模式 1：常规图标网格 (5列) */
+    /* 模式 1：常规图标网格 (5列，防撑爆) */
     .icon-grid {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(5, minmax(0, 1fr));
       gap: 10px 4px;
       justify-items: center;
     }
@@ -622,6 +616,7 @@
       flex-direction: column;
       align-items: center;
       width: 100%;
+      min-width: 0;
       cursor: pointer;
       position: relative;
     }
@@ -655,11 +650,12 @@
       z-index: 10;
     }
 
-    /* 普通人设专属长方形大卡片网格 */
+    /* 普通人设专属长方形大卡片网格 (严格双列等宽 50%，防止长名字撑爆) */
     .persona-grid-view {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 10px;
+      width: 100%;
     }
 
     /* 同等大小的长方形添加虚线卡片 */
@@ -672,6 +668,7 @@
       align-items: center;
       justify-content: center;
       min-height: 84px;
+      min-width: 0;
       background: rgba(255, 255, 255, 0.25);
       cursor: pointer;
       transition: all 0.2s ease;
@@ -790,6 +787,9 @@
       flex-direction: column;
       justify-content: space-between;
       min-height: 84px;
+      min-width: 0;
+      width: 100%;
+      overflow: hidden;
       box-shadow: var(--shadow);
       position: relative;
       cursor: pointer;
@@ -802,8 +802,13 @@
 
     .persona-card-top {
       display: flex;
+      flex-direction: column;
       align-items: center;
-      gap: 8px;
+      justify-content: center;
+      gap: 6px;
+      width: 100%;
+      min-width: 0;
+      text-align: center;
     }
 
     /* HTML / DOCX 档案长条卡片 */
@@ -861,24 +866,30 @@
       border: 1px solid rgba(255, 255, 255, 0.9);
     }
 
+    /* 名字向下换行展示全名，居中对齐 */
     .persona-rect-name {
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 600;
       color: var(--text-main);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      flex: 1;
+      line-height: 1.35;
+      text-align: center;
+      white-space: normal;
+      word-break: break-all;
+      overflow-wrap: anywhere;
+      width: 100%;
     }
 
+    /* 底部小标签居中排列 */
     .persona-inner-tags {
       display: flex;
       flex-wrap: wrap;
       gap: 4px;
       align-items: center;
+      justify-content: center;
       margin-top: 8px;
       padding-top: 6px;
       border-top: 1px dashed rgba(148, 163, 184, 0.25);
+      width: 100%;
     }
 
     .add-box {
@@ -1264,10 +1275,146 @@
       border-radius: 14px;
       padding: 12px 14px;
       font-size: 11.5px;
-      line-height: 1.6;
+      line-height: 1.65;
       color: var(--text-main);
       box-shadow: var(--shadow);
       display: none;
+    }
+
+    /* 高级功能指南条目清单 */
+    .guide-section-box {
+      background: rgba(255, 255, 255, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.85);
+      border-radius: 12px;
+      padding: 10px 12px;
+      margin-bottom: 8px;
+    }
+
+    .guide-section-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .guide-section-content {
+      font-size: 11px;
+      color: var(--text-sub);
+      line-height: 1.6;
+    }
+
+    /* 网页工具长按详情高级信息行 */
+    .tool-info-card {
+      background: rgba(255, 255, 255, 0.55);
+      border: 1px solid rgba(255, 255, 255, 0.85);
+      border-radius: 12px;
+      padding: 10px 12px;
+      margin-bottom: 8px;
+    }
+
+    .tool-info-row {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      margin-bottom: 8px;
+    }
+
+    .tool-info-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .tool-info-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-sub);
+    }
+
+    .tool-info-value {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-main);
+      word-break: break-all;
+      user-select: text;
+      -webkit-user-select: text;
+    }
+
+    /* 安装应用图标选择抽屉 */
+    .app-icon-drawer-box {
+      background: rgba(255, 255, 255, 0.55);
+      border: 1px solid var(--glass-border);
+      border-radius: 14px;
+      padding: 12px 14px;
+      box-shadow: var(--shadow);
+      display: none;
+    }
+
+    .app-icon-grid {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      overflow-x: auto;
+      padding: 4px 2px;
+      scrollbar-width: none;
+    }
+
+    .app-icon-grid::-webkit-scrollbar {
+      display: none;
+    }
+
+    .app-icon-card {
+      width: 54px;
+      height: 54px;
+      border-radius: 14px;
+      border: 2px solid transparent;
+      padding: 2px;
+      cursor: pointer;
+      position: relative;
+      flex-shrink: 0;
+      transition: all 0.2s ease;
+    }
+
+    .app-icon-card.selected {
+      border-color: var(--accent);
+      box-shadow: 0 2px 8px rgba(91, 124, 153, 0.3);
+    }
+
+    .app-icon-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 10px;
+      display: block;
+    }
+
+    .app-icon-card-add {
+      width: 54px;
+      height: 54px;
+      border-radius: 14px;
+      border: 1.5px dashed var(--border-dash);
+      background: rgba(255, 255, 255, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent);
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: all 0.2s ease;
+    }
+
+    .app-icon-card-add:active {
+      transform: scale(0.94);
+      background: var(--accent-light);
+    }
+
+    .app-icon-card-add svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      stroke-width: 2.2;
+      fill: none;
     }
 
     /* 账密存储独立子页面 */
@@ -2051,6 +2198,151 @@
       transform: scale(0.97);
     }
 
+    /* 高级开场教程引导弹窗样式 */
+    .guide-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.45);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 1000;
+    }
+
+    .guide-modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .guide-glass-card {
+      width: 100%;
+      max-width: 320px;
+      background: rgba(237, 242, 246, 0.94);
+      backdrop-filter: blur(30px) saturate(190%);
+      -webkit-backdrop-filter: blur(30px) saturate(190%);
+      border: 1.5px solid rgba(255, 255, 255, 0.9);
+      border-radius: 26px;
+      padding: 22px 18px 18px 18px;
+      box-shadow: 0 20px 45px rgba(30, 41, 59, 0.18);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      transform: translateY(18px) scale(0.95);
+      transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+    }
+
+    .guide-modal-overlay.active .guide-glass-card {
+      transform: translateY(0) scale(1);
+    }
+
+    .guide-step-badge {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--accent);
+      background: var(--accent-light);
+      padding: 3px 9px;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      letter-spacing: 0.5px;
+    }
+
+    .guide-visual-box {
+      width: 64px;
+      height: 64px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.95);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent);
+      margin-bottom: 14px;
+      box-shadow: 0 8px 20px rgba(91, 124, 153, 0.15);
+      animation: guide-float 2.4s ease-in-out infinite alternate;
+    }
+
+    .guide-visual-box svg {
+      width: 30px;
+      height: 30px;
+      stroke: currentColor;
+      stroke-width: 1.9;
+      fill: none;
+    }
+
+    @keyframes guide-float {
+      0% { transform: translateY(0px); }
+      100% { transform: translateY(-5px); }
+    }
+
+    .guide-step-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+
+    .guide-step-desc {
+      font-size: 11.5px;
+      color: var(--text-sub);
+      line-height: 1.6;
+      margin-bottom: 16px;
+      padding: 0 4px;
+    }
+
+    .guide-dots-bar {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+
+    .guide-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 3px;
+      background: rgba(148, 163, 184, 0.4);
+      transition: all 0.25s ease;
+    }
+
+    .guide-dot.active {
+      width: 18px;
+      background: var(--accent);
+    }
+
+    /* 声明专用高规格警告卡片样式 */
+    .statement-alert-card {
+      text-align: left;
+      background: rgba(255, 255, 255, 0.65);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      border-radius: 14px;
+      padding: 12px;
+      margin-bottom: 14px;
+      font-size: 11.5px;
+      color: var(--text-main);
+      line-height: 1.65;
+    }
+
+    .statement-alert-card p {
+      margin-bottom: 8px;
+    }
+
+    .statement-alert-card p:last-child {
+      margin-bottom: 0;
+    }
+
     /* 底部导航栏 */
     nav.tab-bar {
       position: fixed;
@@ -2191,7 +2483,69 @@
         <div class="profile-menu-arrow">➔</div>
       </div>
 
-      <!-- 排列 2：声明 -->
+      <!-- 排列 2：安装应用的图标选择 (声明上面那行，支持折叠展开) -->
+      <div class="profile-menu-row" onclick="toggleAppIconDrawer()">
+        <div class="profile-menu-left">
+          <div class="profile-menu-icon">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5" ry="5"></rect><circle cx="12" cy="12" r="3"></circle></svg>
+          </div>
+          <div>
+            <div class="profile-menu-title">安装应用的图标选择</div>
+            <div class="profile-menu-desc">更换小工具保存至手机桌面时的展示图标</div>
+          </div>
+        </div>
+        <div class="profile-menu-arrow" id="appIconArrow">▼</div>
+      </div>
+
+      <!-- 图标选择抽屉 -->
+      <div class="app-icon-drawer-box" id="appIconDrawerBox">
+        <div style="font-size: 11px; color: var(--text-sub); margin-bottom: 8px;">点击图标即可应用切换，点击加号可添加自定义图标：</div>
+        <div class="app-icon-grid" id="appIconListContainer"></div>
+      </div>
+
+      <!-- 排列 3：功能指南 (点击即时展开抽屉查看全部功能文字，亦可呼出弹窗) -->
+      <div class="profile-menu-row" onclick="toggleGuideDrawer()">
+        <div class="profile-menu-left">
+          <div class="profile-menu-icon">
+            <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+          </div>
+          <div>
+            <div class="profile-menu-title">功能指南</div>
+            <div class="profile-menu-desc">查看小工具全功能详解与操作技巧</div>
+          </div>
+        </div>
+        <div class="profile-menu-arrow" id="guideDrawerArrow">▼</div>
+      </div>
+
+      <!-- 功能指南展开抽屉盒 (文字直接在当前页面清晰展开，无需跳转) -->
+      <div class="statement-box" id="guideDrawerBox" style="display: none;">
+        <div class="guide-section-box">
+          <div class="guide-section-title">网页小工具与长按详情</div>
+          <div class="guide-section-content">轻触小手机卡片可直接调用指定浏览器打开网页；长按小手机卡片约 0.5 秒即可呼出详情弹窗，查看其名字、完整网址及绑定浏览器，支持快速复制链接。</div>
+        </div>
+        <div class="guide-section-box">
+          <div class="guide-section-title">标签长按自定义排版</div>
+          <div class="guide-section-content">长按任意顶部标签胶囊（如人设、世界书或自定义分区），可自由切换为图标、长条清单、双列长方形或正方形等 4 种排版样式。</div>
+        </div>
+        <div class="guide-section-box">
+          <div class="guide-section-title">本地档案与 ZIP 大包解压</div>
+          <div class="guide-section-content">支持批量多选导入 docx、txt、html、json 文件以及 ZIP 压缩大包，系统将自动解压提取包内所有文件并分流归档；亦支持手写输入直接留存。</div>
+        </div>
+        <div class="guide-section-box">
+          <div class="guide-section-title">酒馆人设与世界书结构化查看</div>
+          <div class="guide-section-content">导入的酒馆 PNG/JSON 角色卡将自动解析并分类呈现人设描述、主备选开场白、世界书条目以及包含 HTML 样式的正则渲染沙盒。</div>
+        </div>
+        <div class="guide-section-box">
+          <div class="guide-section-title">小手机账密安全存储</div>
+          <div class="guide-section-content">在【我的】页面中可独立管理各小手机的账号、密码及激活码，明文便捷输入，支持一键单独复制，离线持久化镜像保存。</div>
+        </div>
+        <div class="guide-section-box">
+          <div class="guide-section-title">自定义应用桌面图标</div>
+          <div class="guide-section-content">在【我的】页面展开【安装应用的图标选择】，可自由切换预设图标或点击加号导入相册图片/URL，添加到桌面时的应用图标将同步更新。</div>
+        </div>
+      </div>
+
+      <!-- 排列 4：声明 -->
       <div class="profile-menu-row" onclick="toggleStatementBox()">
         <div class="profile-menu-left">
           <div class="profile-menu-icon">
@@ -2205,9 +2559,11 @@
         <div class="profile-menu-arrow" id="statementArrow">▼</div>
       </div>
 
-      <!-- 声明抽屉 -->
+      <!-- 声明抽屉 (包含版权与数据备份免责声明) -->
       <div class="statement-box" id="statementBox">
-        不要二传这个小工具，一切解释权归创作者耳机所有
+        <p style="margin-bottom: 6px;">不要二传这个小工具，一切解释权归创作者耳机所有。</p>
+        <p style="margin-bottom: 6px;">建议还是用网页端勤备份，数据并不是一直不会被清理到的，如果你的手机内存不足，很有可能会影响到小工具，那你所存储的文件，所以一定要保持每次的备份。</p>
+        <p>小工具不是完全不会被清理数据的，因个人不勤备份原因，数据文件消失之类的，不归耳机负责。</p>
       </div>
 
       <!-- 持久化存储安全状态 -->
@@ -2380,7 +2736,7 @@
           <div class="file-upload-dropzone" onclick="document.getElementById('docFileInput').click()">
             <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
             <div class="dropzone-main-text" id="fileUploadPrompt">点击批量多选文件</div>
-            <div class="dropzone-sub-text" id="fileFormatHelp">支持格式：.docx / .txt / .html / .png / .json</div>
+            <div class="dropzone-sub-text" id="fileFormatHelp">支持格式：.docx / .txt / .html / .png / .json / .zip </div>
           </div>
           <input type="file" id="docFileInput" multiple style="display: none;" onchange="handleFileSelect(event)" />
         </div>
@@ -2565,6 +2921,58 @@
     </div>
   </div>
 
+  <!-- 弹窗：长按标签修改排版弹窗 -->
+  <div class="modal-overlay" id="changeLayoutModalOverlay">
+    <div class="glass-dialog" style="max-width: 295px;">
+      <div class="dialog-title" id="changeLayoutTitle">自定义标签排版</div>
+      <div class="form-group">
+        <label>选择当前标签的新排版样式</label>
+        <div class="layout-selector-grid">
+          <div class="layout-choice-card" data-layout="icon" onclick="selectTagLayoutOption(this)">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            <span>图标大小</span>
+          </div>
+          <div class="layout-choice-card" data-layout="list" onclick="selectTagLayoutOption(this)">
+            <svg viewBox="0 0 24 24"><line x1="4" y1="6" x2="20" y2="6"></line><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="18" x2="20" y2="18"></line></svg>
+            <span>长条形状</span>
+          </div>
+          <div class="layout-choice-card" data-layout="rect2" onclick="selectTagLayoutOption(this)">
+            <svg viewBox="0 0 24 24"><rect x="3" y="5" width="8" height="14" rx="2"></rect><rect x="13" y="5" width="8" height="14" rx="2"></rect></svg>
+            <span>长方形 (一行两)</span>
+          </div>
+          <div class="layout-choice-card" data-layout="square" onclick="selectTagLayoutOption(this)">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="2"></rect><rect x="13" y="3" width="8" height="8" rx="2"></rect><rect x="3" y="13" width="8" height="8" rx="2"></rect><rect x="13" y="13" width="8" height="8" rx="2"></rect></svg>
+            <span>正方形</span>
+          </div>
+        </div>
+      </div>
+      <div class="dialog-btns">
+        <button class="btn btn-cancel" onclick="closeModal('changeLayoutModalOverlay')">取消</button>
+        <button class="btn btn-submit" onclick="confirmSaveChangedLayout()">保存排版</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 弹窗：添加自定义应用桌面图标 -->
+  <div class="modal-overlay" id="addAppIconModalOverlay">
+    <div class="glass-dialog" style="max-width: 290px;">
+      <div class="dialog-title">添加应用图标</div>
+      <div class="form-group">
+        <label>方式一：输入图片在线链接 (URL)</label>
+        <input type="url" id="appIconUrlInput" class="form-input" placeholder="https://...jpg / png" />
+      </div>
+      <div class="form-group">
+        <label>方式二：从手机本地相册选择</label>
+        <button class="btn btn-secondary" style="width:100%; height:34px;" onclick="document.getElementById('customAppIconFileInput').click()">选择本地图片</button>
+        <input type="file" id="customAppIconFileInput" accept="image/*" style="display:none;" onchange="handleAppIconFileUpload(event)" />
+      </div>
+      <div class="dialog-btns">
+        <button class="btn btn-cancel" onclick="closeModal('addAppIconModalOverlay')">取消</button>
+        <button class="btn btn-submit" onclick="saveCustomAppIconFromUrl()">确认添加</button>
+      </div>
+    </div>
+  </div>
+
   <!-- 弹窗 7：新建标签弹窗 (支持4种排版自选) -->
   <div class="modal-overlay" id="newTagModalOverlay">
     <div class="glass-dialog" style="max-width: 295px;">
@@ -2643,6 +3051,91 @@
       <div class="dialog-btns">
         <button class="btn btn-cancel" onclick="closeModal('detectModalOverlay')">取消</button>
         <button class="btn btn-submit" onclick="saveDetectedBrowsers()">确认添加</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 弹窗：全功能指南高级弹窗 (无表情包，全功能详解) -->
+  <div class="modal-overlay" id="fullFeatureGuideModalOverlay">
+    <div class="glass-dialog" style="max-width: 330px;">
+      <div class="dialog-title">全功能操作指南</div>
+      
+      <div class="dialog-scroll-body" style="padding-right: 2px;">
+        <div class="guide-section-box">
+          <div class="guide-section-title">网页小工具与长按查看</div>
+          <div class="guide-section-content">
+            轻触卡片可直接调用手机默认或指定浏览器启动网页；长按小手机卡片即可弹出高级详情弹窗，查看其名称、完整网址链接与绑定的打开浏览器。
+          </div>
+        </div>
+
+        <div class="guide-section-box">
+          <div class="guide-section-title">标签长按自定义排版</div>
+          <div class="guide-section-content">
+            长按任意顶部标签胶囊（如人设、世界书或自定义分区），可自由切换为图标、长条清单、双列长方形或正方形等 4 种排版样式。
+          </div>
+        </div>
+
+        <div class="guide-section-box">
+          <div class="guide-section-title">本地档案与 ZIP 大包解压</div>
+          <div class="guide-section-content">
+            支持批量多选导入 docx、txt、html、json 文件以及 ZIP 压缩大包，系统将自动解压提取包内所有文件并分流归档；亦支持手写输入直接留存。
+          </div>
+        </div>
+
+        <div class="guide-section-box">
+          <div class="guide-section-title">酒馆人设与世界书结构化查看</div>
+          <div class="guide-section-content">
+            导入的酒馆 PNG/JSON 角色卡将自动解析并分类呈现人设描述、主备选开场白、世界书条目以及包含 HTML 样式的正则渲染沙盒。
+          </div>
+        </div>
+
+        <div class="guide-section-box">
+          <div class="guide-section-title">小手机账密安全存储</div>
+          <div class="guide-section-content">
+            在【我的】页面中可独立管理各小手机的账号、密码及激活码，明文便捷输入，支持一键单独复制，离线持久化镜像保存。
+          </div>
+        </div>
+
+        <div class="guide-section-box">
+          <div class="guide-section-title">自定义应用桌面图标</div>
+          <div class="guide-section-content">
+            在【我的】页面展开【安装应用的图标选择】，可自由切换预设图标或点击加号导入相册图片/URL，添加到桌面时的应用图标将同步更新。
+          </div>
+        </div>
+      </div>
+
+      <div class="dialog-btns">
+        <button class="btn btn-submit" onclick="closeModal('fullFeatureGuideModalOverlay')">已知晓</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 弹窗：小手机网页工具长按详情高级弹窗 -->
+  <div class="modal-overlay" id="webToolDetailModalOverlay">
+    <div class="glass-dialog" style="max-width: 310px;">
+      <div class="dialog-title">网页工具详情</div>
+
+      <div class="dialog-scroll-body">
+        <div class="tool-info-card">
+          <div class="tool-info-row">
+            <span class="tool-info-label">小手机名字</span>
+            <span class="tool-info-value" id="webDetailName">--</span>
+          </div>
+          <div class="tool-info-row">
+            <span class="tool-info-label">网页链接</span>
+            <span class="tool-info-value" id="webDetailUrl" style="font-family: monospace; font-size: 11px; color: var(--accent);">--</span>
+          </div>
+          <div class="tool-info-row">
+            <span class="tool-info-label">打开浏览器</span>
+            <span class="tool-info-value" id="webDetailBrowser">--</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dialog-btns">
+        <button class="btn btn-cancel" onclick="closeModal('webToolDetailModalOverlay')">关闭</button>
+        <button class="btn btn-secondary" onclick="copyWebDetailUrl()">复制链接</button>
+        <button class="btn btn-submit" id="webDetailLaunchBtn">立即打开</button>
       </div>
     </div>
   </div>
@@ -2733,7 +3226,157 @@
     }
 
     // ==========================================
-    // 2. 标签与酒馆系统配置
+    // 2. 应用图标管理 (内置两套 + 自定义扩展，自动更新桌面快捷方式与标题栏图标)
+    // ==========================================
+    const BUILTIN_APP_ICONS = [
+      'https://2.58sb.cn/file/img/XOl6F3oJ.jpg',
+      'https://image.58sb.cn/file/img/0QjLqQcb.jpg'
+    ];
+
+    let customAppIconsList = JSON.parse(localStorage.getItem('custom_app_icons_list') || '[]');
+    let currentSelectedAppIcon = localStorage.getItem('current_app_icon') || BUILTIN_APP_ICONS[0];
+
+    function applyAppIcon(iconUrl) {
+      if (!iconUrl) return;
+      currentSelectedAppIcon = iconUrl;
+      localStorage.setItem('current_app_icon', iconUrl);
+
+      // 更新或注入 apple-touch-icon
+      let appleIcon = document.querySelector('link[rel="apple-touch-icon"]');
+      if (!appleIcon) {
+        appleIcon = document.createElement('link');
+        appleIcon.rel = 'apple-touch-icon';
+        document.head.appendChild(appleIcon);
+      }
+      appleIcon.href = iconUrl;
+
+      // 更新或注入 favicon
+      let favIcon = document.querySelector('link[rel="icon"]');
+      if (!favIcon) {
+        favIcon = document.createElement('link');
+        favIcon.rel = 'icon';
+        document.head.appendChild(favIcon);
+      }
+      favIcon.href = iconUrl;
+
+      // 动态生成 Manifest 支持添加到主屏幕图标
+      const manifestObj = {
+        name: "Small tools",
+        short_name: "Small tools",
+        start_url: window.location.href,
+        display: "standalone",
+        background_color: "#edf2f6",
+        theme_color: "#edf2f6",
+        icons: [{
+          src: iconUrl,
+          sizes: "192x192 512x512",
+          type: "image/png"
+        }]
+      };
+      const manifestBlob = new Blob([JSON.stringify(manifestObj)], { type: 'application/json' });
+      const manifestUrl = URL.createObjectURL(manifestBlob);
+
+      let manifestLink = document.querySelector('link[rel="manifest"]');
+      if (!manifestLink) {
+        manifestLink = document.createElement('link');
+        manifestLink.rel = 'manifest';
+        document.head.appendChild(manifestLink);
+      }
+      manifestLink.href = manifestUrl;
+    }
+
+    applyAppIcon(currentSelectedAppIcon);
+
+    function toggleAppIconDrawer() {
+      const box = document.getElementById('appIconDrawerBox');
+      const arrow = document.getElementById('appIconArrow');
+      if (box.style.display === 'none' || !box.style.display) {
+        box.style.display = 'block';
+        if (arrow) arrow.innerText = '▲';
+        renderAppIconsUI();
+      } else {
+        box.style.display = 'none';
+        if (arrow) arrow.innerText = '▼';
+      }
+    }
+
+    function renderAppIconsUI() {
+      const container = document.getElementById('appIconListContainer');
+      if (!container) return;
+      container.innerHTML = '';
+
+      const allIcons = [...BUILTIN_APP_ICONS, ...customAppIconsList];
+
+      allIcons.forEach(iconUrl => {
+        const isSelected = (iconUrl === currentSelectedAppIcon);
+        const card = document.createElement('div');
+        card.className = `app-icon-card ${isSelected ? 'selected' : ''}`;
+        card.innerHTML = `<img src="${iconUrl}" alt="图标" />`;
+        card.onclick = () => {
+          applyAppIcon(iconUrl);
+          renderAppIconsUI();
+          // 用户点击图标刷新界面，桌面上的图标随之生效更新
+          setTimeout(() => {
+            window.location.reload();
+          }, 200);
+        };
+        container.appendChild(card);
+      });
+
+      // 添加自定义图标加号按钮
+      const addBtn = document.createElement('div');
+      addBtn.className = 'app-icon-card-add';
+      addBtn.title = '添加自定义图标';
+      addBtn.innerHTML = `<svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>`;
+      addBtn.onclick = () => {
+        document.getElementById('appIconUrlInput').value = '';
+        openModal('addAppIconModalOverlay');
+      };
+      container.appendChild(addBtn);
+    }
+
+    function saveCustomAppIconFromUrl() {
+      const url = document.getElementById('appIconUrlInput').value.trim();
+      if (!url) {
+        alert('请输入有效的图片链接');
+        return;
+      }
+      if (!customAppIconsList.includes(url)) {
+        customAppIconsList.push(url);
+        localStorage.setItem('custom_app_icons_list', JSON.stringify(customAppIconsList));
+      }
+      closeModal('addAppIconModalOverlay');
+      applyAppIcon(url);
+      renderAppIconsUI();
+      setTimeout(() => {
+        window.location.reload();
+      }, 200);
+    }
+
+    function handleAppIconFileUpload(event) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const b64 = e.target.result;
+        if (!customAppIconsList.includes(b64)) {
+          customAppIconsList.push(b64);
+          localStorage.setItem('custom_app_icons_list', JSON.stringify(customAppIconsList));
+        }
+        closeModal('addAppIconModalOverlay');
+        applyAppIcon(b64);
+        renderAppIconsUI();
+        setTimeout(() => {
+          window.location.reload();
+        }, 200);
+      };
+      reader.readAsDataURL(file);
+      event.target.value = '';
+    }
+
+    // ==========================================
+    // 3. 标签与酒馆系统配置
     // ==========================================
     const DEFAULT_TAGS_MAP = {
       phone: ['免费机', '付费机', '其他网页小工具'],
@@ -2760,9 +3403,7 @@
     let curSelectedTagLayout = 'icon';
 
     function getTagLayout(tab, tag) {
-      // 保证美化、表情包、生图提示词始终为单列长条清单
-      if (tab === 'food' && (tag === '美化' || tag === '表情包' || tag === '生图提示词')) return 'list';
-
+      // 若用户通过长按自定义过排版，优先使用用户的个性化设置
       if (tagLayoutsMap && tagLayoutsMap[`${tab}_${tag}`]) {
         return tagLayoutsMap[`${tab}_${tag}`];
       }
@@ -2794,14 +3435,14 @@
     const TAVERN_PASSWORD = 'XGJHNBNKSL';
 
     const KNOWN_BROWSERS = [
-      { id: 'quark', name: '夸克浏览器', scheme: 'quark://', pkg: 'com.quark.browser' },
-      { id: 'alook', name: 'Alook 浏览器', scheme: 'alook://', pkg: 'com.alookdesktop.browser' },
-      { id: 'firefox', name: 'Firefox 火狐', scheme: 'firefox://open-url?url=', pkg: 'org.mozilla.firefox' },
-      { id: 'uc', name: 'UC 浏览器', scheme: 'ucbrowser://', pkg: 'com.UCMobile' },
-      { id: 'brave', name: 'Brave 浏览器', scheme: 'brave://open-url?url=', pkg: 'com.brave.browser' },
-      { id: 'kiwi', name: 'Kiwi 浏览器', scheme: 'kiwibrowser://', pkg: 'com.kiwibrowser.browser' },
-      { id: 'sogou', name: '搜狗浏览器', scheme: 'sogousearch://', pkg: 'sogou.mobile.explorer' },
-      { id: '360', name: '360 浏览器', scheme: 'qihoo360://', pkg: 'com.qihoo.browser' }
+      { id: 'quark', name: '夸克浏览器', scheme: 'quark://' },
+      { id: 'alook', name: 'Alook 浏览器', scheme: 'alook://' },
+      { id: 'firefox', name: 'Firefox 火狐', scheme: 'firefox://open-url?url=' },
+      { id: 'uc', name: 'UC 浏览器', scheme: 'ucbrowser://' },
+      { id: 'brave', name: 'Brave 浏览器', scheme: 'brave://open-url?url=' },
+      { id: 'kiwi', name: 'Kiwi 浏览器', scheme: 'kiwibrowser://' },
+      { id: 'sogou', name: '搜狗浏览器', scheme: 'sogousearch://' },
+      { id: '360', name: '360 浏览器', scheme: 'qihoo360://' }
     ];
 
     let savedCustomBrowsers = JSON.parse(localStorage.getItem('saved_custom_browsers') || '[]');
@@ -3124,64 +3765,6 @@
       }
     }
 
-    // ==========================================
-    // PWA 直接安装为桌面应用引擎 (Chrome / Edge 专享)
-    // ==========================================
-    let deferredPwaPrompt = null;
-
-    // 监听浏览器原生 PWA 安装就绪信号
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPwaPrompt = e;
-      const installBtn = document.getElementById('pwaInstallBtn');
-      if (installBtn) {
-        installBtn.style.color = 'var(--accent)';
-        installBtn.style.borderColor = 'var(--accent)';
-      }
-    });
-
-    // 检查是否已经在独立全屏 App 状态下运行
-    function isRunningStandalone() {
-      return (window.matchMedia('(display-mode: standalone)').matches) || (window.navigator.standalone === true);
-    }
-
-    function triggerPwaInstall() {
-      if (isRunningStandalone()) {
-        alert('Small Tools 已经是以桌面独立应用模式运行啦！^^');
-        return;
-      }
-
-      // 如果浏览器捕获到了安装句柄，直接一键唤醒原生安装对话框
-      if (deferredPwaPrompt) {
-        deferredPwaPrompt.prompt();
-        deferredPwaPrompt.userChoice.then((choiceResult) => {
-          if (choiceResult.outcome === 'accepted') {
-            deferredPwaPrompt = null;
-          }
-        });
-      } else {
-        // 如果未捕获（如部分手机环境或已被拒绝过），打开智能图文指引
-        document.getElementById('pwaManualGuideText').style.display = 'block';
-        openModal('pwaInstallModalOverlay');
-      }
-    }
-
-    async function executePwaInstall() {
-      if (deferredPwaPrompt) {
-        closeModal('pwaInstallModalOverlay');
-        deferredPwaPrompt.prompt();
-        deferredPwaPrompt = null;
-      } else {
-        closeModal('pwaInstallModalOverlay');
-        alert('请在 Chrome / Edge 点击右上角【⋮】或底栏【…】，点击【安装应用】即可秒速安装到桌面！');
-      }
-    }
-
-    window.addEventListener('appinstalled', () => {
-      deferredPwaPrompt = null;
-      alert('Small Tools 安装成功！已在手机桌面上生成独立应用图标。');
-    });
-
     // APK / 网页一键旋转刷新整页
     function refreshPage() {
       const btn = document.getElementById('refreshPageBtn');
@@ -3269,6 +3852,55 @@
       return tagsMap[currentTab];
     }
 
+    // 标签长按触发自定义排版逻辑
+    let longPressTimer = null;
+    let targetChangingTag = '';
+
+    function bindTagLongPress(element, tag) {
+      const startPress = (e) => {
+        longPressTimer = setTimeout(() => {
+          openChangeLayoutModal(tag);
+        }, 550);
+      };
+
+      const cancelPress = () => {
+        if (longPressTimer) {
+          clearTimeout(longPressTimer);
+          longPressTimer = null;
+        }
+      };
+
+      element.addEventListener('touchstart', startPress, { passive: true });
+      element.addEventListener('touchend', cancelPress);
+      element.addEventListener('touchmove', cancelPress);
+      element.addEventListener('mousedown', startPress);
+      element.addEventListener('mouseup', cancelPress);
+      element.addEventListener('mouseleave', cancelPress);
+    }
+
+    function openChangeLayoutModal(tag) {
+      targetChangingTag = tag;
+      document.getElementById('changeLayoutTitle').innerText = `自定义「${tag}」排版`;
+      const currentL = getTagLayout(currentTab, tag);
+      document.querySelectorAll('#changeLayoutModalOverlay .layout-choice-card').forEach(card => {
+        if (card.getAttribute('data-layout') === currentL) {
+          card.classList.add('selected');
+        } else {
+          card.classList.remove('selected');
+        }
+      });
+      curSelectedTagLayout = currentL;
+      openModal('changeLayoutModalOverlay');
+    }
+
+    function confirmSaveChangedLayout() {
+      if (!targetChangingTag) return;
+      tagLayoutsMap[`${currentTab}_${targetChangingTag}`] = curSelectedTagLayout;
+      localStorage.setItem('small_tools_tag_layouts', JSON.stringify(tagLayoutsMap));
+      closeModal('changeLayoutModalOverlay');
+      renderCards();
+    }
+
     function renderTagBar() {
       if (currentTab === 'profile' || isSearchActive) {
         tagBarContainer.style.display = 'none';
@@ -3289,6 +3921,7 @@
           const mainTag = document.createElement('div');
           mainTag.className = `exp-main-tag ${currentActive === '人设' ? 'active' : ''}`;
           mainTag.innerText = '人设';
+          bindTagLongPress(mainTag, '人设');
           mainTag.onclick = () => {
             activeTagMap.food = '人设';
             renderTagBar();
@@ -3305,6 +3938,7 @@
           const subTag = document.createElement('div');
           subTag.className = `exp-sub-tag ${currentActive === '酒馆人设' ? 'active' : ''}`;
           subTag.innerText = '酒馆人设';
+          bindTagLongPress(subTag, '酒馆人设');
           subTag.onclick = (e) => {
             e.stopPropagation();
             activeTagMap.food = '酒馆人设';
@@ -3323,6 +3957,7 @@
           const isDefault = (currentTab !== 'other') && (DEFAULT_TAGS_MAP[currentTab] || []).includes(tag);
           const chip = document.createElement('div');
           chip.className = `tag-chip ${tag === currentActive ? 'active' : ''} ${!isDefault ? 'custom-tag' : ''}`;
+          bindTagLongPress(chip, tag);
           chip.onclick = () => {
             activeTagMap[currentTab] = tag;
             renderTagBar();
@@ -3502,17 +4137,90 @@
         box.classList.add('unlocked');
         badge.innerText = '已激活';
         text.innerText = '已解锁酒馆角色卡/世界书自动解析';
-        input.accept = '.docx,.txt,.html,.json,.png';
-        prompt.innerText = '点击批量多选文件';
-        help.innerText = '支持格式：.docx / .txt / .html / .png / .json';
+        input.accept = '.docx,.txt,.html,.json,.png,.zip';
+        prompt.innerText = '点击批量多选文件 (支持ZIP大包)';
+        help.innerText = '支持格式：.docx / .txt / .html / .png / .json / .zip 大包';
       } else {
         box.classList.remove('unlocked');
         badge.innerText = '未解锁';
         text.innerText = '解锁酒馆卡导入资格 (PNG/JSON)';
-        input.accept = '.docx,.txt,.html';
-        prompt.innerText = '点击批量多选文件';
-        help.innerText = '支持格式：.docx / .txt / .html';
+        input.accept = '.docx,.txt,.html,.zip';
+        prompt.innerText = '点击批量多选文件 (支持ZIP大包)';
+        help.innerText = '支持格式：.docx / .txt / .html / .zip 大包';
       }
+    }
+
+    // 原生轻量 ZIP 解压提取器 (全格式解包引擎)
+    async function extractZipFiles(arrayBuffer) {
+      const extractedFiles = [];
+      try {
+        const bytes = new Uint8Array(arrayBuffer);
+        const len = bytes.length;
+        if (len < 22) return extractedFiles;
+
+        let eocdOffset = -1;
+        for (let i = len - 22; i >= Math.max(0, len - 65536 - 22); i--) {
+          if (bytes[i] === 0x50 && bytes[i + 1] === 0x4B && bytes[i + 2] === 0x05 && bytes[i + 3] === 0x06) {
+            eocdOffset = i;
+            break;
+          }
+        }
+        if (eocdOffset === -1) return extractedFiles;
+
+        const view = new DataView(arrayBuffer);
+        const cdOffset = view.getUint32(eocdOffset + 16, true);
+        const cdEntries = view.getUint16(eocdOffset + 10, true);
+
+        let cur = cdOffset;
+        for (let k = 0; k < cdEntries && cur < eocdOffset; k++) {
+          if (view.getUint32(cur, true) !== 0x02014B50) break;
+
+          const compression = view.getUint16(cur + 10, true);
+          const compSize = view.getUint32(cur + 20, true);
+          const fnLen = view.getUint16(cur + 28, true);
+          const extraLen = view.getUint16(cur + 30, true);
+          const commentLen = view.getUint16(cur + 32, true);
+          const localHeaderOffset = view.getUint32(cur + 42, true);
+
+          const fnBytes = bytes.subarray(cur + 46, cur + 46 + fnLen);
+          let fileName = new TextDecoder('utf-8').decode(fnBytes).replace(/\\/g, '/');
+
+          if (!fileName.endsWith('/') && !fileName.includes('__MACOSX/')) {
+            const pureFileName = fileName.split('/').pop();
+            const lhCur = localHeaderOffset;
+            if (view.getUint32(lhCur, true) === 0x04034B50) {
+              const lhFnLen = view.getUint16(lhCur + 26, true);
+              const lhExtraLen = view.getUint16(lhCur + 28, true);
+              const dataStart = lhCur + 30 + lhFnLen + lhExtraLen;
+              const compData = bytes.subarray(dataStart, dataStart + compSize);
+
+              let uncompressedData = null;
+              if (compression === 8 && typeof DecompressionStream !== 'undefined') {
+                const ds = new DecompressionStream('deflate-raw');
+                const writer = ds.writable.getWriter();
+                writer.write(compData);
+                writer.close();
+                uncompressedData = await new Response(ds.readable).arrayBuffer();
+              } else if (compression === 0) {
+                uncompressedData = compData.buffer.slice(compData.byteOffset, compData.byteOffset + compData.byteLength);
+              }
+
+              if (uncompressedData) {
+                const subExt = pureFileName.slice(pureFileName.lastIndexOf('.')).toLowerCase();
+                const validExts = ['.docx', '.txt', '.html', '.png', '.json'];
+                if (validExts.includes(subExt)) {
+                  const virtualFile = new File([uncompressedData], pureFileName);
+                  extractedFiles.push(virtualFile);
+                }
+              }
+            }
+          }
+          cur += 46 + fnLen + extraLen + commentLen;
+        }
+      } catch (err) {
+        console.warn('ZIP解包错误:', err);
+      }
+      return extractedFiles;
     }
 
     function handleTavernUnlockClick() {
@@ -3760,25 +4468,43 @@
     }
 
     async function handleFileSelect(event) {
-      const files = Array.from(event.target.files);
-      if (!files.length) return;
+      const initialFiles = Array.from(event.target.files);
+      if (!initialFiles.length) return;
 
       currentUploadedFilesList = [];
       const prompt = document.getElementById('fileUploadPrompt');
       const nameInput = document.getElementById('fileDocName');
+      prompt.innerText = '正在解析文件(含ZIP解压)...';
 
-      if (files.length === 1) {
-        prompt.innerText = `已选: ${files[0].name}`;
+      // 自动解压 ZIP 压缩包
+      let finalFiles = [];
+      for (const f of initialFiles) {
+        if (f.name.toLowerCase().endsWith('.zip')) {
+          const ab = await f.arrayBuffer();
+          const unzipped = await extractZipFiles(ab);
+          if (unzipped.length > 0) {
+            finalFiles.push(...unzipped);
+          } else {
+            finalFiles.push(f);
+          }
+        } else {
+          finalFiles.push(f);
+        }
+      }
+
+      if (finalFiles.length === 1) {
+        prompt.innerText = `已选: ${finalFiles[0].name}`;
+        nameInput.value = finalFiles[0].name.replace(/\.[^/.]+$/, "");
       } else {
-        prompt.innerText = `已多选 ${files.length} 个文件`;
-        nameInput.value = `批量导入 (${files.length} 个档案)`;
+        prompt.innerText = `已解析 ${finalFiles.length} 个档案 (含ZIP解压)`;
+        nameInput.value = `批量导入 (${finalFiles.length} 个档案)`;
         nameInput.placeholder = "已自动提取各自文件名与角色卡信息";
       }
 
-      const parsedItems = await Promise.all(files.map(file => processSingleFile(file)));
+      const parsedItems = await Promise.all(finalFiles.map(file => processSingleFile(file)));
       currentUploadedFilesList = parsedItems;
 
-      if (files.length === 1 && currentUploadedFilesList[0]) {
+      if (finalFiles.length === 1 && currentUploadedFilesList[0]) {
         nameInput.value = currentUploadedFilesList[0].name;
       }
     }
@@ -4416,71 +5142,37 @@
       renderCards();
     });
 
-    // 专为 WebToApp / APK 打包定制的直接外跳引擎（杜绝触发 APK 内置全屏窗口）
     function launchTool(url, browser, customScheme) {
       if (isEditMode) return;
+      try {
+        if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen();
+      } catch (err) {}
 
-      let fullUrl = url.trim();
-      if (!/^https?:\/\//i.test(fullUrl)) {
-        fullUrl = 'https://' + fullUrl;
-      }
-      const scheme = fullUrl.startsWith('https://') ? 'https' : 'http';
-      const cleanUrl = fullUrl.replace(/^https?:\/\//i, '');
-      const isAndroid = /android/i.test(navigator.userAgent);
+      const cleanUrl = url.replace(/^https?:\/\//, '');
+      let finalTarget = url;
 
-      // 安卓常见各大浏览器官方包名
-      const PKG_MAP = {
-        'chrome': 'com.android.chrome',
-        'edge': 'com.microsoft.emmx',
-        'via': 'mark.via',
-        'xbrowser': 'com.xbrowser.play',
-        'yujian': 'com.yj.browser'
-      };
-
-      let finalTarget = fullUrl;
-
-      if (isAndroid) {
-        if (browser === 'default') {
-          // 呼叫安卓系统级 Intent 选择器跳出 APK 壳子
-          finalTarget = `intent://${cleanUrl}#Intent;scheme=${scheme};action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;end`;
-        } else if (PKG_MAP[browser]) {
-          // 锁定指定浏览器包名
-          const pkg = PKG_MAP[browser];
-          finalTarget = `intent://${cleanUrl}#Intent;scheme=${scheme};package=${pkg};S.browser_fallback_url=${encodeURIComponent(fullUrl)};end`;
-        } else if (browser === 'saved_custom' || browser === 'custom') {
-          const matched = KNOWN_BROWSERS.find(b => b.scheme === customScheme || b.id === customScheme);
-          if (matched && matched.pkg) {
-            finalTarget = `intent://${cleanUrl}#Intent;scheme=${scheme};package=${matched.pkg};S.browser_fallback_url=${encodeURIComponent(fullUrl)};end`;
-          } else if (customScheme) {
-            finalTarget = customScheme.includes('url=') 
-              ? `${customScheme}${encodeURIComponent(fullUrl)}` 
-              : `${customScheme.endsWith('://') ? customScheme : customScheme + '://'}${cleanUrl}`;
+      switch(browser) {
+        case 'chrome': finalTarget = `googlechrome://${cleanUrl}`; break;
+        case 'safari': finalTarget = url; break;
+        case 'edge': finalTarget = `microsoft-edge-${url.startsWith('https') ? 'https' : 'http'}://${cleanUrl}`; break;
+        case 'via': finalTarget = `via://${cleanUrl}`; break;
+        case 'xbrowser': finalTarget = `xb://${cleanUrl}`; break;
+        case 'yujian': finalTarget = `yujian://${cleanUrl}`; break;
+        case 'saved_custom':
+        case 'custom':
+          if (customScheme) {
+            if (customScheme.includes('url=')) {
+              finalTarget = `${customScheme}${encodeURIComponent(url)}`;
+            } else {
+              const prefix = customScheme.endsWith('://') ? customScheme : customScheme + '://';
+              finalTarget = `${prefix}${cleanUrl}`;
+            }
           }
-        }
-      } else {
-        // iOS 平台处理
-        switch(browser) {
-          case 'chrome': finalTarget = `googlechrome://${cleanUrl}`; break;
-          case 'edge': finalTarget = `microsoft-edge-${scheme}://${cleanUrl}`; break;
-          case 'via': finalTarget = `via://${cleanUrl}`; break;
-          case 'xbrowser': finalTarget = `xb://${cleanUrl}`; break;
-          case 'yujian': finalTarget = `yujian://${cleanUrl}`; break;
-          default: finalTarget = fullUrl;
-        }
+          break;
+        default: finalTarget = url;
       }
 
-      // 严禁使用 target="_blank"（否则 WebToApp 会强制打开它的全屏内置浏览器导致卡死）
-      // 1. 尝试 WebToApp / Cordova 原生脱壳指令
-      try {
-        if (window.open) {
-          window.open(fullUrl, '_system');
-        }
-      } catch (e) {}
-
-      // 2. 安卓 Intent 单通道精准直投，直接交由手机系统外部应用接管
-      try {
-        window.location.href = finalTarget;
-      } catch (e) {}
+      setTimeout(() => { window.location.href = finalTarget; }, 50);
     }
 
     // ==========================================
@@ -4953,14 +5645,25 @@
             toolsGrid.appendChild(card);
           });
         }
-        // E. 默认常规小图标模式 (5列网格)
+        // E. 默认常规小图标模式 (5列网格，支持长按查看详情)
         else {
           toolsGrid.className = 'icon-grid';
 
           filteredList.forEach(item => {
             const appItem = document.createElement('div');
             appItem.className = `app-item ${isEditMode ? 'edit-mode' : ''}`;
-            appItem.onclick = () => handleItemClick(item);
+            appItem.onclick = (e) => {
+              if (window.isPreventNextClick) {
+                window.isPreventNextClick = false;
+                return;
+              }
+              handleItemClick(item);
+            };
+
+            // 只要含有 url 或者是 web 类型，均判定为小手机网页工具，强制绑定长按
+            if (item.url || item.type === 'web') {
+              bindWebToolLongPress(appItem, item);
+            }
 
             let iconContent = '';
             if (item.avatarDataUrl) {
@@ -5048,6 +5751,118 @@
       };
       reader.readAsText(file);
       event.target.value = '';
+    }
+
+    // ==========================================
+    // 小手机网页工具长按高级详情弹窗驱动
+    // ==========================================
+    let currentWebDetailItem = null;
+
+    function getBrowserDisplayName(browserKey, scheme) {
+      const map = {
+        'default': '手机系统默认浏览器',
+        'safari': 'Safari 浏览器',
+        'edge': 'Microsoft Edge',
+        'chrome': 'Google Chrome',
+        'via': 'Via 浏览器',
+        'xbrowser': 'X 浏览器',
+        'yujian': '雨见浏览器'
+      };
+      if (browserKey === 'saved_custom' || browserKey === 'custom') {
+        return '自定义浏览器协议 (' + (scheme || '未知协议') + ')';
+      }
+      return map[browserKey] || '手机默认浏览器';
+    }
+
+    // 功能指南抽屉展开与折叠
+    function toggleGuideDrawer() {
+      const box = document.getElementById('guideDrawerBox');
+      const arrow = document.getElementById('guideDrawerArrow');
+      if (box.style.display === 'none' || !box.style.display) {
+        box.style.display = 'block';
+        if (arrow) arrow.innerText = '▲';
+      } else {
+        box.style.display = 'none';
+        if (arrow) arrow.innerText = '▼';
+      }
+    }
+
+    // 小手机高灵敏长按驱动 (支持触屏防抖动，长按震动反馈，不误触发跳转)
+    function bindWebToolLongPress(element, item) {
+      let timer = null;
+      let startX = 0;
+      let startY = 0;
+
+      const onStart = (e) => {
+        if (isEditMode) return;
+        const touch = e.touches ? e.touches[0] : e;
+        startX = touch.clientX;
+        startY = touch.clientY;
+
+        timer = setTimeout(() => {
+          window.isPreventNextClick = true;
+          if (navigator.vibrate) navigator.vibrate(35);
+          openWebToolDetailModal(item);
+        }, 450);
+      };
+
+      const onMove = (e) => {
+        if (!timer) return;
+        const touch = e.touches ? e.touches[0] : e;
+        // 允许手指有 10 像素以内的轻微生理抖动，超过 10 像素判定为上下滑动页面才取消
+        if (Math.abs(touch.clientX - startX) > 10 || Math.abs(touch.clientY - startY) > 10) {
+          clearTimeout(timer);
+          timer = null;
+        }
+      };
+
+      const onEnd = () => {
+        if (timer) {
+          clearTimeout(timer);
+          timer = null;
+        }
+      };
+
+      element.oncontextmenu = (e) => {
+        if (!isEditMode) e.preventDefault();
+      };
+
+      element.addEventListener('touchstart', onStart, { passive: true });
+      element.addEventListener('touchmove', onMove, { passive: true });
+      element.addEventListener('touchend', onEnd);
+      element.addEventListener('touchcancel', onEnd);
+      element.addEventListener('mousedown', onStart);
+      element.addEventListener('mousemove', onMove);
+      element.addEventListener('mouseup', onEnd);
+      element.addEventListener('mouseleave', onEnd);
+    }
+
+    function openWebToolDetailModal(item) {
+      currentWebDetailItem = item;
+      const nameEl = document.getElementById('webDetailName');
+      const urlEl = document.getElementById('webDetailUrl');
+      const browserEl = document.getElementById('webDetailBrowser');
+      const launchBtn = document.getElementById('webDetailLaunchBtn');
+
+      if (nameEl) nameEl.innerText = item.name || '未命名网页';
+      if (urlEl) urlEl.innerText = item.url || '--';
+      if (browserEl) browserEl.innerText = getBrowserDisplayName(item.browser, item.customScheme);
+
+      if (launchBtn) {
+        launchBtn.onclick = () => {
+          closeModal('webToolDetailModalOverlay');
+          launchTool(item.url, item.browser, item.customScheme);
+        };
+      }
+
+      openModal('webToolDetailModalOverlay');
+    }
+
+    function copyWebDetailUrl() {
+      if (!currentWebDetailItem || !currentWebDetailItem.url) return;
+      navigator.clipboard.writeText(currentWebDetailItem.url).then(() => {
+        alert('已复制网页链接到剪贴板！');
+      });
     }
   </script>
 </body>
