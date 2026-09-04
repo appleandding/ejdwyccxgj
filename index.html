@@ -777,9 +777,7 @@
     }
 
     .persona-rect-card {
-      background: var(--glass-card);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+      background: rgba(255, 255, 255, 0.85); /* 采用高清通透纯色半透，彻底避免滚动时GPU掉图层 */
       border: 1px solid var(--glass-border);
       border-radius: 16px;
       padding: 10px;
@@ -789,11 +787,13 @@
       min-height: 84px;
       min-width: 0;
       width: 100%;
-      overflow: hidden;
+      box-sizing: border-box;
       box-shadow: var(--shadow);
       position: relative;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: transform 0.15s ease;
+      -webkit-transform: translateZ(0); /* 锁定独立稳定图层，杜绝滑动白块 */
+      transform: translateZ(0);
     }
 
     .persona-rect-card:active {
@@ -1822,7 +1822,7 @@
       gap: 8px;
     }
 
-    /* 液态玻璃弹窗基类 (加入GPU独立分层与防闪白优化，彻底根治键盘升降白块卡顿) */
+    /* 液态玻璃弹窗基类 (未唤起时彻底 display:none 释放手机GPU，杜绝白块) */
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -1830,26 +1830,22 @@
       right: 0;
       bottom: 0;
       background: rgba(15, 23, 42, 0.38);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      display: flex;
+      display: none; /* 必须彻底隐藏，绝不能常驻后台挤爆显存 */
       align-items: center;
       justify-content: center;
       padding: 16px;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: opacity 0.2s ease;
       z-index: 999;
-      transform: translateZ(0);
-      -webkit-transform: translateZ(0);
-      backface-visibility: hidden;
-      -webkit-backface-visibility: hidden;
-      contain: strict;
     }
 
     .modal-overlay.active {
+      display: flex !important;
       opacity: 1;
       pointer-events: auto;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
     }
 
     .glass-dialog {
@@ -2877,6 +2873,30 @@
         </div>
       </div>
 
+      <!-- 排列：安装应用的图标选择 (支持折叠展开) -->
+      <div class="profile-menu-row" onclick="toggleAppIconDrawer()">
+        <div class="profile-menu-left">
+          <div class="profile-menu-icon">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5" ry="5"></rect><circle cx="12" cy="12" r="3"></circle></svg>
+          </div>
+          <div>
+            <div class="profile-menu-title">安装应用的图标选择</div>
+            <div class="profile-menu-desc">更换小工具保存至手机桌面时的展示图标</div>
+            <div style="font-size: 9.5px; color: var(--accent); margin-top: 2px;">（仅iOS用户替换后有效果）</div>
+          </div>
+        </div>
+        <div class="profile-menu-arrow" id="appIconArrow">▼</div>
+      </div>
+
+      <!-- 图标选择抽屉 -->
+      <div class="app-icon-drawer-box" id="appIconDrawerBox">
+        <div style="font-size: 11px; color: var(--text-sub); margin-bottom: 8px;">
+          点击图标即可应用切换，点击加号可添加自定义图标：
+          <div style="color: var(--accent); font-size: 10px; margin-top: 2px;">（仅iOS用户替换后有效果）</div>
+        </div>
+        <div class="app-icon-grid" id="appIconListContainer"></div>
+      </div>
+
       <!-- 排列 4：声明 -->
       <div class="profile-menu-row" onclick="toggleStatementBox()">
         <div class="profile-menu-left">
@@ -3333,27 +3353,6 @@
         <label>标签名称</label>
         <input type="text" id="newTagNameInput" class="form-input" placeholder="例如：自制便当 / 秘籍" />
       </div>
-      <div class="form-group">
-        <label>选择排版样式</label>
-        <div class="layout-selector-grid">
-          <div class="layout-choice-card selected" data-layout="icon" onclick="selectTagLayoutOption(this)">
-            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-            <span>图标大小</span>
-          </div>
-          <div class="layout-choice-card" data-layout="list" onclick="selectTagLayoutOption(this)">
-            <svg viewBox="0 0 24 24"><line x1="4" y1="6" x2="20" y2="6"></line><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="18" x2="20" y2="18"></line></svg>
-            <span>长条形状</span>
-          </div>
-          <div class="layout-choice-card" data-layout="rect2" onclick="selectTagLayoutOption(this)">
-            <svg viewBox="0 0 24 24"><rect x="3" y="5" width="8" height="14" rx="2"></rect><rect x="13" y="5" width="8" height="14" rx="2"></rect></svg>
-            <span>长方形 (一行两)</span>
-          </div>
-          <div class="layout-choice-card" data-layout="square" onclick="selectTagLayoutOption(this)">
-            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="2"></rect><rect x="13" y="3" width="8" height="8" rx="2"></rect><rect x="3" y="13" width="8" height="8" rx="2"></rect><rect x="13" y="13" width="8" height="8" rx="2"></rect></svg>
-            <span>正方形</span>
-          </div>
-        </div>
-      </div>
       <div class="dialog-btns">
         <button class="btn btn-cancel" onclick="closeModal('newTagModalOverlay')">取消</button>
         <button class="btn btn-submit" onclick="confirmAddNewTag()">创建标签</button>
@@ -3361,19 +3360,70 @@
     </div>
   </div>
 
-  <!-- 弹窗：v2.2.5 版本更新公告弹窗 -->
+  <!-- 弹窗：添加自定义应用桌面图标 -->
+  <div class="modal-overlay" id="addAppIconModalOverlay">
+    <div class="glass-dialog" style="max-width: 290px;">
+      <div class="dialog-title">添加应用图标</div>
+      <div style="font-size: 10px; color: var(--accent); text-align: center; margin-bottom: 8px;">（仅iOS用户替换后有效果）</div>
+      <div class="form-group">
+        <label>方式一：输入图片在线链接 (URL)</label>
+        <input type="url" id="appIconUrlInput" class="form-input" placeholder="https://...jpg / png" />
+      </div>
+      <div class="form-group">
+        <label>方式二：从手机本地相册选择</label>
+        <button class="btn btn-secondary" style="width:100%; height:34px;" onclick="document.getElementById('customAppIconFileInput').click()">选择本地图片</button>
+        <input type="file" id="customAppIconFileInput" accept="image/*" style="display:none;" onchange="handleAppIconFileUpload(event)" />
+      </div>
+      <div class="dialog-btns">
+        <button class="btn btn-cancel" onclick="closeModal('addAppIconModalOverlay')">取消</button>
+        <button class="btn btn-submit" onclick="saveCustomAppIconFromUrl()">确认添加</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 弹窗：v2.2.8 版本更新公告弹窗 -->
   <div class="modal-overlay" id="versionUpdateModalOverlay">
     <div class="glass-dialog" style="max-width: 330px;">
       <div style="text-align: center; margin-bottom: 6px;">
         <span class="version-badge">
           <svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2.2;"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path></svg>
-          版本更新 v2.2.5
+          版本更新 v2.2.8
         </span>
         <div class="dialog-title" style="margin-bottom: 0;">全新功能与优化就绪</div>
       </div>
 
       <div class="dialog-scroll-body" style="padding-right: 2px;">
         <div class="version-log-list">
+          <div class="version-log-item">
+            <div class="version-log-icon">
+              <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5" ry="5"></rect><circle cx="12" cy="12" r="3"></circle></svg>
+            </div>
+            <div class="version-log-content">
+              <div class="version-log-title">自定义应用桌面图标</div>
+              <div class="version-log-desc">在【我的】页面支持挑选或上传图标，生成专属桌面图标（仅iOS用户替换后有效果）。</div>
+            </div>
+          </div>
+
+          <div class="version-log-item">
+            <div class="version-log-icon">
+              <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            </div>
+            <div class="version-log-content">
+              <div class="version-log-title">iOS / 安卓 导出全面修复</div>
+              <div class="version-log-desc">接入原生分享与二进制直下，彻底解决苹果手机导出原文件与备份被拦截、无法保存的问题。</div>
+            </div>
+          </div>
+
+          <div class="version-log-item">
+            <div class="version-log-icon">
+              <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            </div>
+            <div class="version-log-content">
+              <div class="version-log-title">解决滑动白块与排版错位</div>
+              <div class="version-log-desc">优化底层 GPU 渲染与显存开销，彻底根治上下滑动卡片消失变白块、文字隐形排版异常的问题。</div>
+            </div>
+          </div>
+
           <div class="version-log-item">
             <div class="version-log-icon">
               <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg>
@@ -3396,41 +3446,11 @@
 
           <div class="version-log-item">
             <div class="version-log-icon">
-              <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
-            </div>
-            <div class="version-log-content">
-              <div class="version-log-title">小手机图标上传与长按编辑</div>
-              <div class="version-log-desc">新建小工具支持上传自定义图标；长按工具可直接更换相册图标、修改链接与启动浏览器。</div>
-            </div>
-          </div>
-
-          <div class="version-log-item">
-            <div class="version-log-icon">
               <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
             </div>
             <div class="version-log-content">
               <div class="version-log-title">普通人设头像与设定编辑</div>
               <div class="version-log-desc">普通人设支持点击更换头像与正文编辑；酒馆角色卡保持结构化只读与原件安全。</div>
-            </div>
-          </div>
-
-          <div class="version-log-item">
-            <div class="version-log-icon">
-              <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-            </div>
-            <div class="version-log-content">
-              <div class="version-log-title">底层 Blob 引擎与备份防丢</div>
-              <div class="version-log-desc">重构单文件及备份导出为二进制内存流，解决移动端拦截、大文件截断与跨机导入丢失。</div>
-            </div>
-          </div>
-
-          <div class="version-log-item">
-            <div class="version-log-icon">
-              <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-            </div>
-            <div class="version-log-content">
-              <div class="version-log-title">液态玻璃质感升级 & 防闪屏</div>
-              <div class="version-log-desc">全面淘汰原生系统黑灰弹窗，升级浮动液态玻璃 Toast，彻底根除软键盘升降的白块卡顿。</div>
             </div>
           </div>
         </div>
@@ -3674,21 +3694,30 @@
       });
     }
 
-    async function syncSaveData(data) {
-      try {
-        localStorage.setItem('small_tools_data', JSON.stringify(data));
-      } catch(e){}
-
-      if (!dbInstance) await initIndexedDB();
-      if (dbInstance) {
+    function syncSaveData(data) {
+      return new Promise(async (resolve) => {
         try {
-          const tx = dbInstance.transaction(STORE_NAME, 'readwrite');
-          const store = tx.objectStore(STORE_NAME);
-          store.put({ key: 'main_data', data: data });
+          localStorage.setItem('small_tools_data', JSON.stringify(data));
         } catch (e) {
-          console.warn('IDB write error:', e);
+          console.warn('LocalStorage限额或不可用，主存采用IndexedDB');
         }
-      }
+
+        if (!dbInstance) await initIndexedDB();
+        if (dbInstance) {
+          try {
+            const tx = dbInstance.transaction(STORE_NAME, 'readwrite');
+            const store = tx.objectStore(STORE_NAME);
+            store.put({ key: 'main_data', data: data });
+            tx.oncomplete = () => resolve(true);
+            tx.onerror = () => resolve(false);
+            tx.onabort = () => resolve(false);
+            return;
+          } catch (e) {
+            console.warn('IDB write error:', e);
+          }
+        }
+        resolve(false);
+      });
     }
 
     async function loadPersistentData() {
@@ -3732,6 +3761,152 @@
           statusText.innerText = '已启用本地双核引擎备份，数据受安全保护。';
         }
       }
+    }
+
+    // ==========================================
+    // 2. 应用图标管理 (仅iOS保存到主屏幕有效果)
+    // ==========================================
+    const BUILTIN_APP_ICONS = [
+      'https://2.58sb.cn/file/img/XOl6F3oJ.jpg',
+      'https://image.58sb.cn/file/img/0QjLqQcb.jpg'
+    ];
+
+    let customAppIconsList = JSON.parse(localStorage.getItem('custom_app_icons_list') || '[]');
+    let currentSelectedAppIcon = localStorage.getItem('current_app_icon') || BUILTIN_APP_ICONS[0];
+
+    function applyAppIcon(iconUrl) {
+      if (!iconUrl) return;
+      currentSelectedAppIcon = iconUrl;
+      localStorage.setItem('current_app_icon', iconUrl);
+
+      // 更新或注入 apple-touch-icon
+      let appleIcon = document.querySelector('link[rel="apple-touch-icon"]');
+      if (!appleIcon) {
+        appleIcon = document.createElement('link');
+        appleIcon.rel = 'apple-touch-icon';
+        document.head.appendChild(appleIcon);
+      }
+      appleIcon.href = iconUrl;
+
+      // 更新或注入 favicon
+      let favIcon = document.querySelector('link[rel="icon"]');
+      if (!favIcon) {
+        favIcon = document.createElement('link');
+        favIcon.rel = 'icon';
+        document.head.appendChild(favIcon);
+      }
+      favIcon.href = iconUrl;
+
+      // 动态生成 Manifest 支持添加到主屏幕图标
+      const manifestObj = {
+        name: "Small tools",
+        short_name: "Small tools",
+        start_url: window.location.href,
+        display: "standalone",
+        background_color: "#edf2f6",
+        theme_color: "#edf2f6",
+        icons: [{
+          src: iconUrl,
+          sizes: "192x192 512x512",
+          type: "image/png"
+        }]
+      };
+      const manifestBlob = new Blob([JSON.stringify(manifestObj)], { type: 'application/json' });
+      const manifestUrl = URL.createObjectURL(manifestBlob);
+
+      let manifestLink = document.querySelector('link[rel="manifest"]');
+      if (!manifestLink) {
+        manifestLink = document.createElement('link');
+        manifestLink.rel = 'manifest';
+        document.head.appendChild(manifestLink);
+      }
+      manifestLink.href = manifestUrl;
+    }
+
+    applyAppIcon(currentSelectedAppIcon);
+
+    function toggleAppIconDrawer() {
+      const box = document.getElementById('appIconDrawerBox');
+      const arrow = document.getElementById('appIconArrow');
+      if (box.style.display === 'none' || !box.style.display) {
+        box.style.display = 'block';
+        if (arrow) arrow.innerText = '▲';
+        renderAppIconsUI();
+      } else {
+        box.style.display = 'none';
+        if (arrow) arrow.innerText = '▼';
+      }
+    }
+
+    function renderAppIconsUI() {
+      const container = document.getElementById('appIconListContainer');
+      if (!container) return;
+      container.innerHTML = '';
+
+      const allIcons = [...BUILTIN_APP_ICONS, ...customAppIconsList];
+
+      allIcons.forEach(iconUrl => {
+        const isSelected = (iconUrl === currentSelectedAppIcon);
+        const card = document.createElement('div');
+        card.className = `app-icon-card ${isSelected ? 'selected' : ''}`;
+        card.innerHTML = `<img src="${iconUrl}" alt="图标" />`;
+        card.onclick = () => {
+          applyAppIcon(iconUrl);
+          renderAppIconsUI();
+          setTimeout(() => {
+            window.location.reload();
+          }, 200);
+        };
+        container.appendChild(card);
+      });
+
+      // 添加自定义图标加号按钮
+      const addBtn = document.createElement('div');
+      addBtn.className = 'app-icon-card-add';
+      addBtn.title = '添加自定义图标';
+      addBtn.innerHTML = `<svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>`;
+      addBtn.onclick = () => {
+        document.getElementById('appIconUrlInput').value = '';
+        openModal('addAppIconModalOverlay');
+      };
+      container.appendChild(addBtn);
+    }
+
+    function saveCustomAppIconFromUrl() {
+      const url = document.getElementById('appIconUrlInput').value.trim();
+      if (!url) {
+        alert('请输入有效的图片链接');
+        return;
+      }
+      if (!customAppIconsList.includes(url)) {
+        customAppIconsList.push(url);
+        localStorage.setItem('custom_app_icons_list', JSON.stringify(customAppIconsList));
+      }
+      closeModal('addAppIconModalOverlay');
+      applyAppIcon(url);
+      renderAppIconsUI();
+      setTimeout(() => {
+        window.location.reload();
+      }, 200);
+    }
+
+    async function handleAppIconFileUpload(event) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+
+      const b64 = await compressAvatarImage(file, 200);
+      if (!b64) return;
+      if (!customAppIconsList.includes(b64)) {
+        customAppIconsList.push(b64);
+        localStorage.setItem('custom_app_icons_list', JSON.stringify(customAppIconsList));
+      }
+      closeModal('addAppIconModalOverlay');
+      applyAppIcon(b64);
+      renderAppIconsUI();
+      setTimeout(() => {
+        window.location.reload();
+      }, 200);
+      event.target.value = '';
     }
 
     // ==========================================
@@ -4279,7 +4454,7 @@
       }, 180);
     }
 
-    const CURRENT_APP_VERSION = 'v2.2.5';
+    const CURRENT_APP_VERSION = 'v2.2.8';
 
     // 自动检测并弹出版本更新公告
     function checkVersionUpdateNotice() {
@@ -5673,53 +5848,98 @@
       });
     }
 
-    // 通用二进制 Blob 安全下载驱动 (彻底解决移动端 data: 链接被拦截、导不出问题)
+    // 依据文件名自动获取安卓/iOS系统严格认可的合法 MIME 类型
+    function getFileMimeType(fileName) {
+      const ext = fileName.slice(fileName.lastIndexOf('.')).toLowerCase();
+      const mimeMap = {
+        '.png': 'image/png',
+        '.jpg': 'image/jpeg',
+        '.jpeg': 'image/jpeg',
+        '.webp': 'image/webp',
+        '.json': 'application/json',
+        '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        '.txt': 'text/plain;charset=utf-8',
+        '.html': 'text/html;charset=utf-8',
+        '.zip': 'application/zip'
+      };
+      return mimeMap[ext] || 'application/octet-stream';
+    }
+
+    // 通用二进制 Blob 安全下载驱动 (精准匹配图片与文档格式，防止安卓系统媒体库拦截)
     function downloadBlobFile(blob, fileName) {
-      const blobUrl = URL.createObjectURL(blob);
+      const mime = getFileMimeType(fileName);
+      const downloadBlob = new Blob([blob], { type: mime });
+      const blobUrl = URL.createObjectURL(downloadBlob);
       const a = document.createElement('a');
       a.style.display = 'none';
       a.href = blobUrl;
       a.download = fileName;
       document.body.appendChild(a);
+      
       a.click();
+
       setTimeout(() => {
         document.body.removeChild(a);
         URL.revokeObjectURL(blobUrl);
-      }, 1500);
+      }, 3000);
     }
 
-    // Base64 安全转换为 Blob 实体
-    function base64ToBlob(base64Data, defaultType = 'application/octet-stream') {
+    // Base64 高速切片转换为 Blob 实体 (支持指定类型)
+    function base64ToBlob(base64Data, defaultType = 'image/png') {
       try {
-        const parts = base64Data.split(';base64,');
-        const contentType = parts[0].replace('data:', '') || defaultType;
-        const raw = atob(parts[1] || parts[0]);
-        const rawLength = raw.length;
-        const uInt8Array = new Uint8Array(rawLength);
-        for (let i = 0; i < rawLength; ++i) {
-          uInt8Array[i] = raw.charCodeAt(i);
+        let b64 = base64Data;
+        let contentType = defaultType;
+        if (base64Data.indexOf(';base64,') !== -1) {
+          const parts = base64Data.split(';base64,');
+          contentType = parts[0].replace(/^data:/, '') || defaultType;
+          b64 = parts[1];
         }
-        return new Blob([uInt8Array], { type: contentType });
+        b64 = b64.replace(/[\r\n\s]/g, '');
+        const byteCharacters = atob(b64);
+        const byteArrays = [];
+        const sliceSize = 2048;
+        for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+          const slice = byteCharacters.slice(offset, offset + sliceSize);
+          const byteNumbers = new Array(slice.length);
+          for (let i = 0; i < slice.length; i++) {
+            byteNumbers[i] = slice.charCodeAt(i);
+          }
+          byteArrays.push(new Uint8Array(byteNumbers));
+        }
+        return new Blob(byteArrays, { type: contentType });
       } catch (e) {
+        console.warn('Blob 转换失败:', e);
         return null;
       }
     }
 
-    // 单文件导出驱动 (PNG/JSON/DOCX/TXT/HTML 全兼容下载)
+    // 单文件导出驱动 (酒馆卡 PNG/JSON、DOCX、TXT 点击自动正常下载)
     function downloadRawFileItem(item) {
       if (!item.rawBase64Url) {
         alert('未找到原文件镜像数据');
         return;
       }
-      const blob = base64ToBlob(item.rawBase64Url);
-      if (!blob) {
-        alert('文件解码失败，无法导出');
-        return;
-      }
       const ext = item.ext || '';
       const fullName = item.name.endsWith(ext) ? item.name : `${item.name}${ext}`;
-      downloadBlobFile(blob, fullName);
-      showToast('正在导出文件...');
+      const correctMime = getFileMimeType(fullName);
+      
+      // 1. 采用精准 MIME 类型进行 Blob 转换与下载 (解决安卓 MediaStore 报错)
+      const blob = base64ToBlob(item.rawBase64Url, correctMime);
+      if (blob) {
+        downloadBlobFile(blob, fullName);
+        showToast('已开始下载：' + fullName);
+        return;
+      }
+
+      // 2. 兜底直接触发下载
+      const a = document.createElement('a');
+      a.style.display = 'none';
+      a.href = item.rawBase64Url;
+      a.download = fullName;
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => document.body.removeChild(a), 1500);
+      showToast('已开始下载：' + fullName);
     }
 
     let currentTaggingCardId = null;
